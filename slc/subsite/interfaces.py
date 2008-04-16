@@ -1,5 +1,6 @@
 from zope import schema
 from zope.interface import Interface, alsoProvides
+from plone.app.layout.navigation.interfaces import INavigationRoot
 
 class IAnySubsiteCapable(Interface):
     """Any aspect of subsite capable.
@@ -9,7 +10,7 @@ class IPossibleSubsite(IAnySubsiteCapable):
     """ All objects that could be subsites should implement this interface.
     """
     
-class ISubsiteEnhanced(Interface):
+class ISubsiteEnhanced(INavigationRoot):
     """ Marker interface for subsites
     """    
     

@@ -35,7 +35,9 @@
         name="slc.subsite.LargeFolderSubsite"
         factory=".browser.descriptors.LargeFolderSubsiteDescriptor" />
 
-
+    <utility
+        factory=".subtypes.subsite.SkinNamesVocabulary"
+        name="slc.subsite.SkinNamesVocabulary"/>
 
     <!-- Zope 2.10 - 3.3 support -->
     <configure zcml:condition="installed zope.annotation">
