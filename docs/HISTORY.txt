@@ -1,0 +1,9 @@
+Changelog for slc.subsite
+
+    (name of developer listed in brackets)
+
+slc.subsite - 0.1 Unreleased
+
+    - Initial package structure.
+      [zopeskel]
+

@@ -1,0 +1,58 @@
+<configure
+    xmlns="http://namespaces.zope.org/browser"
+    xmlns:zope="http://namespaces.zope.org/zope"
+    xmlns:five="http://namespaces.zope.org/five"
+    i18n_domain="slc.subsite">
+    
+      
+
+      
+  <zope:adapter 
+        factory=".displays.SubsiteDynamicViews"
+        />      
+
+  <page
+      name="subsite-container.html"
+      for="slc.subsite.interfaces.ISubsiteEnhanced"
+      permission="zope2.View"
+      template="subsite-container.pt"
+      class=".subsite.SubsiteView"
+      />
+
+  <page
+      name="subsite-config.html"
+      for="slc.subsite.interfaces.IPossibleSubsite"
+      permission="cmf.ModifyPortalContent"
+      class=".media.ToggleEnhancementsView"
+      />
+            
+     
+  <menuItem
+      menu="object_buttons"
+      for="slc.subsite.interfaces.IAnySubsiteCapable"
+      title="Deactivate Subsite"
+      action="${object_url}/subsite-config.html"
+      filter="object/@@slcsubsitesupport/can_deactivate_subsite"
+      permission="cmf.ModifyPortalContent"
+      />
+
+  <menuItem
+      menu="object_buttons"
+      for="slc.subsite.interfaces.IAnySubsiteCapable"
+      title="Activate Subsite"
+      action="${object_url}/subsite-config.html"
+      filter="object/@@slcsubsitesupport/can_activate_subsite"
+      permission="cmf.ModifyPortalContent"
+      />      
+      
+<!--      
+  <page
+      name="slcsubsitesupport"
+      for="*"
+      class=".support.Support"
+      permission="zope.Public"
+      allowed_interface=".support.IContextualSubsiteSupport"
+      />
+            -->
+</configure>
+      

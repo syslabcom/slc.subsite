@@ -1,0 +1,15 @@
+README.txt
+setup.cfg
+setup.py
+slc/__init__.py
+slc.subsite.egg-info/PKG-INFO
+slc.subsite.egg-info/SOURCES.txt
+slc.subsite.egg-info/dependency_links.txt
+slc.subsite.egg-info/entry_points.txt
+slc.subsite.egg-info/namespace_packages.txt
+slc.subsite.egg-info/not-zip-safe
+slc.subsite.egg-info/paster_plugins.txt
+slc.subsite.egg-info/requires.txt
+slc.subsite.egg-info/top_level.txt
+slc/subsite/__init__.py
+slc/subsite/tests.py
