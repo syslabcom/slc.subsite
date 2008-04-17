@@ -40,7 +40,8 @@
             <div metal:define-slot="inside" tal:replace="structure text">The body</div>
         </div>
 
-
+        <metal:listingmacro use-macro="here/folder_listing/macros/listing">
+        </metal:listingmacro>
 
         <div tal:replace="structure provider:plone.belowcontentbody" />
 
