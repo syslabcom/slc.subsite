@@ -11,11 +11,9 @@
     <include package="p4a.subtyper" />
     <include package="archetypes.schemaextender" />
 
-    <!--include file="profiles.zcml" /-->
-    <!--include file="skins.zcml" /-->
+    <include file="profiles.zcml" />
 
     <include package=".browser" />
-    <!--include package=".adapter" /-->
 
     <class class="Products.ATContentTypes.content.folder.ATFolder">
       <implements interface="slc.subsite.interfaces.IPossibleSubsite" />

@@ -52,3 +52,4 @@ class SkinNamesVocabulary(object):
         return SimpleVocabulary.fromTitleItems(items)
     
     
+

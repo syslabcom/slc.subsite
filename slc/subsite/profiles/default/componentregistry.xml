@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<componentregistry>
+ <adapters/>
+ <utilities>
+  <utility
+     interface="slc.subsite.interfaces.ISubsiteSkinStorage"
+     factory="slc.subsite.storage.SubsiteSkinStorage"/>
+ </utilities>
+</componentregistry>
+     

@@ -1,17 +1,17 @@
-<configure
-    xmlns="http://namespaces.zope.org/browser"
-    xmlns:zope="http://namespaces.zope.org/zope"
-    xmlns:five="http://namespaces.zope.org/five"
-    i18n_domain="slc.subsite">
+<configure xmlns="http://namespaces.zope.org/zope"
+           xmlns:browser="http://namespaces.zope.org/browser"
+           xmlns:zcml="http://namespaces.zope.org/zcml"
+           xmlns:five="http://namespaces.zope.org/five"
+           i18n_domain="slc.subsite">
     
       
 
       
-  <zope:adapter 
+  <adapter 
         factory=".displays.SubsiteDynamicViews"
         />      
 
-  <page
+  <browser:page
       name="subsite-container.html"
       for="slc.subsite.interfaces.ISubsiteEnhanced"
       permission="zope2.View"
@@ -19,7 +19,7 @@
       class=".subsite.SubsiteView"
       />
 
-  <page
+  <browser:page
       name="subsite-config.html"
       for="slc.subsite.interfaces.IPossibleSubsite"
       permission="cmf.ModifyPortalContent"
@@ -27,7 +27,7 @@
       />
             
      
-  <menuItem
+  <browser:menuItem
       menu="object_buttons"
       for="slc.subsite.interfaces.IAnySubsiteCapable"
       title="Deactivate Subsite"
@@ -36,7 +36,7 @@
       permission="cmf.ModifyPortalContent"
       />
 
-  <menuItem
+  <browser:menuItem
       menu="object_buttons"
       for="slc.subsite.interfaces.IAnySubsiteCapable"
       title="Activate Subsite"
@@ -46,7 +46,7 @@
       />      
       
 <!--      
-  <page
+  <browser:page
       name="slcsubsitesupport"
       for="*"
       class=".support.Support"
@@ -54,5 +54,21 @@
       allowed_interface=".support.IContextualSubsiteSupport"
       />
             -->
+            
+               
+  <subscriber 
+     for="Products.CMFPlone.interfaces.IPloneSiteRoot 
+          zope.app.publication.interfaces.IBeforeTraverseEvent" 
+     handler=".skinswitcher.setskin" 
+     />             
+
+  <subscriber 
+     for="slc.subsite.interfaces.ISubsiteEnhanced 
+          zope.lifecycleevent.interfaces.IObjectModifiedEvent" 
+     handler=".skinswitcher.registerSubsiteSkin" 
+     />             
+     
+     
+
 </configure>
       

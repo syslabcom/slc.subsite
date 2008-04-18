@@ -1,0 +1,73 @@
+SubsiteSkinStorage
+==================
+
+    The following tests (see test_storage.py) demonstrate its usage.
+        
+        >>> from slc.subsite.storage import SubsiteSkinStorage
+        >>> p = SubsiteSkinStorage()
+        
+    Add one path
+    
+        >>> p.has_path('/foo')
+        False
+        >>> p.add('/foo', 'default skin')
+        >>> p.has_path('/foo')
+        True
+        >>> p.get('/foo')
+        'default skin'
+        >>> p.has_path('/bar')
+        False
+        
+    Note that trailing slashes are ignored:
+    
+        >>> p.has_path('/foo/')
+        True
+        >>> p.get('/foo/')
+        'default skin'
+        
+    Add another path which is longer
+    
+        >>> p.has_path('/foo/bar')
+        False
+        >>> p.add('/foo/bar', 'subsite skin')
+        >>> p.has_path('/foo/bar')
+        True
+        >>> p.get('/foo/bar')
+        'subsite skin'
+        
+    Make sure that the longest path wins
+    
+        >>> p.get('/foo/x')
+        'default skin'
+        >>> p.get('/foo/bar/x')
+        'subsite skin'    
+        
+    Update a redirect
+    
+        >>> p.add('/foo', 'new skin')
+        >>> p.has_path('/foo')
+        True
+        >>> p.get('/foo')
+        'new skin'
+    
+    Remove a path
+    
+        >>> p.remove('/foo')
+        >>> p.has_path('/foo')
+        False
+        >>> p.get('/foo', default='_notfound_')
+        '_notfound_'
+
+    We can get an iterator over all existing paths
+
+        >>> iter(p)
+        <OO-iterator object at ...>
+        >>> sorted(p)
+        ['/foo/bar']
+
+    Now add some more
+
+        >>> p.add('/foo', 'last skin')
+        >>> p.add('/barney', 'wilma')
+        >>> sorted(p)
+        ['/barney', '/foo', '/foo/bar']
