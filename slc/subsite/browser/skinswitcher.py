@@ -1,5 +1,5 @@
 from Acquisition import aq_base, aq_inner
-
+from urlparse import urlparse, urlunparse, urljoin
 from zope import interface
 from zope import component
 
@@ -8,16 +8,26 @@ from p4a.subtyper.interfaces import ISubtyper
 
 
 def setskin(site, event): 
-     """ Depending on the skin property set on the subsite we override the default skin. 
-     """ 
-     storage = component.queryUtility(ISubsiteSkinStorage)
-     if storage is None:
+    """ Depending on the skin property set on the subsite we override the default skin. 
+    """ 
+    storage = component.queryUtility(ISubsiteSkinStorage)
+    if storage is None:
         return
-     skinname = storage.get(event.request.PATH_INFO, None)
-     if skinname is None:
+    R = event.request
+    path_info = R.PATH_INFO
+    TRNS = R.TraversalRequestNameStack
+    if TRNS[-1] == 'virtual_hosting':
+        trnspath = TRNS[:-2]
+        trnspath.reverse()
+        path = "/".join(site.getPhysicalPath()+tuple(trnspath))
+    else:
+        path = path_info
+
+    skinname = storage.get(path, None)
+    if skinname is None:
         return
 
-     site.changeSkin(skinname, event.request) 
+    site.changeSkin(skinname, R) 
 
 
 
