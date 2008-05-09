@@ -16,7 +16,7 @@ def setskin(site, event):
     R = event.request
     path_info = R.PATH_INFO
     TRNS = R.TraversalRequestNameStack
-    if TRNS[-1] == 'virtual_hosting':
+    if len(TRNS)>1 and TRNS[-1] == 'virtual_hosting':
         trnspath = TRNS[:-2]
         trnspath.reverse()
         path = "/".join(site.getPhysicalPath()+tuple(trnspath))
