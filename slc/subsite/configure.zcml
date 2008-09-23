@@ -37,6 +37,10 @@
         factory=".subtypes.subsite.SkinNamesVocabulary"
         name="slc.subsite.SkinNamesVocabulary"/>
 
+    <utility
+        factory=".subtypes.subsite.SupportedLangsVocabulary"
+        name="slc.subsite.SupportedLangsVocabulary"/>
+
     <!-- Zope 2.10 - 3.3 support -->
     <configure zcml:condition="installed zope.annotation">
         <include package="zope.annotation" />
