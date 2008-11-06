@@ -74,5 +74,12 @@
             slc.publications.linguaplone_addTranslation_patch.IObjectTranslationReferenceSetEvent"
        handler=".skinswitcher.subtype_on_translate"
    />
+
+   <subscriber 
+       for="slc.subsite.interfaces.ISubsiteEnhanced
+            slc.publications.linguaplone_addTranslation_patch.IObjectTranslationReferenceSetEvent"
+       handler=".skinswitcher.registerSubsiteSkin"
+   />
+   
 </configure>
       
