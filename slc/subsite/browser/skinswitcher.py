@@ -7,9 +7,9 @@ from slc.subsite.interfaces import ISubsiteSkinStorage
 from p4a.subtyper.interfaces import ISubtyper
 
 
-def setskin(site, event): 
-    """ Depending on the skin property set on the subsite we override the default skin. 
-    """ 
+def setskin(site, event):
+    """ Depending on the skin property set on the subsite we override the default skin.
+    """
     storage = component.queryUtility(ISubsiteSkinStorage)
     if storage is None:
         return
@@ -27,7 +27,7 @@ def setskin(site, event):
     if skinname is None:
         return
 
-    site.changeSkin(skinname, R) 
+    site.changeSkin(skinname, R)
 
 
 def registerSubsiteSkin(ob, event):
@@ -43,7 +43,7 @@ def registerSubsiteSkin(ob, event):
         return
 
     subsitepath = "/".join(ob.getPhysicalPath())
-    if not skinname and storage.has_path(subsitepath):    
+    if not skinname and storage.has_path(subsitepath):
         storage.remove(subsitepath)
     else:
         storage.add(subsitepath, skinname)
@@ -63,12 +63,12 @@ def registerSubsiteSkin(ob, event):
 # Event handler to catch our own patched event while translation named IObjectTranslationReferenceSetEvent
 # We need this to be able to subtype an object while it is translated.
 def subtype_on_translate(obj, evt):
-    """ EVENT: 
+    """ EVENT:
         Update the chapter links based on the new set values in chapters
-    """    
+    """
     canonical = aq_base(aq_inner(evt.object))
     target = aq_base(aq_inner(evt.target))
-    subtyper = component.getUtility(ISubtyper)    
+    subtyper = component.getUtility(ISubtyper)
     subtype = subtyper.existing_type(canonical)
     if subtype is not None:
         subtyper.change_type(target, subtype.name)
