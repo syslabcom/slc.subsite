@@ -30,29 +30,36 @@ def setskin(site, event):
     site.changeSkin(skinname, R) 
 
 
-
 def registerSubsiteSkin(ob, event):
     """ registers a new skinname for the subsite if set
     """
-    
     field = ob.getField('skin')
     if field is None:
         return
-    
+
     skinname = field.getAccessor(ob)()
-        
     storage = component.queryUtility(ISubsiteSkinStorage)
     if storage is None:
         return
-    
+
     subsitepath = "/".join(ob.getPhysicalPath())
     if not skinname and storage.has_path(subsitepath):    
         storage.remove(subsitepath)
     else:
         storage.add(subsitepath, skinname)
-    
-    
-    
+
+    if ob.isCanonical():
+        canlang = ob.Language()
+        for lang, [trans, state] in ob.getTranslations().items():
+            if lang == canlang:
+                continue
+            subsitepath = "/".join(trans.getPhysicalPath())
+            if not skinname and storage.has_path(subsitepath):
+                storage.remove(subsitepath)
+            else:
+                storage.add(subsitepath, skinname)
+
+
 # Event handler to catch our own patched event while translation named IObjectTranslationReferenceSetEvent
 # We need this to be able to subtype an object while it is translated.
 def subtype_on_translate(obj, evt):
@@ -64,4 +71,4 @@ def subtype_on_translate(obj, evt):
     subtyper = component.getUtility(ISubtyper)    
     subtype = subtyper.existing_type(canonical)
     if subtype is not None:
-        subtyper.change_type(target, subtype.name)    
+        subtyper.change_type(target, subtype.name)
