@@ -16,15 +16,20 @@ def setskin(site, event):
         return
     R = event.request
     path_info = R.PATH_INFO
+
     TRNS = R.TraversalRequestNameStack
-    if len(TRNS)>1 and TRNS[-1] == 'virtual_hosting':
-        trnspath = TRNS[:-2]
+    if len(TRNS)>1 and 'virtual_hosting' in TRNS:
+        idx = TRNS.index('virtual_hosting')-1
+        trnspath = TRNS[0:idx]+TRNS[idx+2:]
         trnspath.reverse()
         path = "/".join(site.getPhysicalPath()+tuple(trnspath))
+        logger.info(path)
     else:
         path = path_info
 
+
     skinname = storage.get(path, None)
+        
     if skinname is None:
         return
 
