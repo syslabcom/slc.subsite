@@ -49,8 +49,6 @@ def registerSubsiteSkin(ob, event):
     
     
     subsitepath = "/".join(ob.getPhysicalPath())
-    logger.info("Skinname is %s" % skinname)
-    logger.info("Subsitepath is %s" % subsitepath)
     
     if not skinname and storage.has_path(subsitepath):
         storage.remove(subsitepath)
@@ -81,8 +79,6 @@ def unregisterSubsiteSkin(ob, event):
         return
     
     subsitepath = "/".join(ob.getPhysicalPath())
-    logger.info("Skinname is %s" % skinname)
-    logger.info("Subsitepath is %s" % subsitepath)
     
     if storage.has_path(subsitepath):
         storage.remove(subsitepath)
