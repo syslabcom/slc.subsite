@@ -23,7 +23,6 @@ def setskin(site, event):
         trnspath = TRNS[0:idx]+TRNS[idx+2:]
         trnspath.reverse()
         path = "/".join(site.getPhysicalPath()+tuple(trnspath))
-        logger.info(path)
     else:
         path = path_info
 
