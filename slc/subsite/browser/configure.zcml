@@ -81,5 +81,12 @@
        handler=".skinswitcher.registerSubsiteSkin"
    />
    
+   <subscriber 
+       for="slc.subsite.interfaces.ISubsiteEnhanced
+            OFS.interfaces.IObjectWillBeRemovedEvent"
+       handler=".skinswitcher.unregisterSubsiteSkin"
+   />
+      
+   
 </configure>
       

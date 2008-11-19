@@ -58,6 +58,7 @@ class SkinNamesVocabulary(object):
         context = getattr(context, 'context', context)
         skintool = getToolByName(context, 'portal_skins')
         items = [ (v, v, v) for v in skintool.getSkinSelections()]
+        items = [(None, '', 'None')] + items
         return SimpleVocabulary.fromTitleItems(items)
 
 

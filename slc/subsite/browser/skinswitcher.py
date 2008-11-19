@@ -2,10 +2,11 @@ from Acquisition import aq_base, aq_inner
 from urlparse import urlparse, urlunparse, urljoin
 from zope import interface
 from zope import component
-
+import logging
 from slc.subsite.interfaces import ISubsiteSkinStorage
 from p4a.subtyper.interfaces import ISubtyper
 
+logger = logging.getLogger("slc.subsite")
 
 def setskin(site, event):
     """ Depending on the skin property set on the subsite we override the default skin.
@@ -41,8 +42,12 @@ def registerSubsiteSkin(ob, event):
     storage = component.queryUtility(ISubsiteSkinStorage)
     if storage is None:
         return
-
+    
+    
     subsitepath = "/".join(ob.getPhysicalPath())
+    logger.info("Skinname is %s" % skinname)
+    logger.info("Subsitepath is %s" % subsitepath)
+    
     if not skinname and storage.has_path(subsitepath):
         storage.remove(subsitepath)
     else:
@@ -58,6 +63,34 @@ def registerSubsiteSkin(ob, event):
                 storage.remove(subsitepath)
             else:
                 storage.add(subsitepath, skinname)
+
+def unregisterSubsiteSkin(ob, event):
+    """ registers a new skinname for the subsite if set
+    """
+    field = ob.getField('skin')
+    if field is None:
+        return
+
+    skinname = field.getAccessor(ob)()
+    storage = component.queryUtility(ISubsiteSkinStorage)
+    if storage is None:
+        return
+    
+    subsitepath = "/".join(ob.getPhysicalPath())
+    logger.info("Skinname is %s" % skinname)
+    logger.info("Subsitepath is %s" % subsitepath)
+    
+    if storage.has_path(subsitepath):
+        storage.remove(subsitepath)
+
+    if ob.isCanonical():
+        canlang = ob.Language()
+        for lang, [trans, state] in ob.getTranslations().items():
+            if lang == canlang:
+                continue
+            subsitepath = "/".join(trans.getPhysicalPath())
+            if storage.has_path(subsitepath):
+                storage.remove(subsitepath)
 
 
 # Event handler to catch our own patched event while translation named IObjectTranslationReferenceSetEvent
