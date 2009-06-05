@@ -1,6 +1,6 @@
 Metadata-Version: 1.0
 Name: slc.subsite
-Version: 0.1dev
+Version: 0.1dev-r1394
 Summary: Make a Folder behave like a Subsite
 Home-page: http://svn.plone.org/svn/collective/slc.subsite
 Author: Syslab.com GmbH

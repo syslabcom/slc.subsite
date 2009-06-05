@@ -1,12 +1,41 @@
+# -*- coding: utf-8 -*-
+"""
+This module contains the slc.subsite package
+"""
+import os
 from setuptools import setup, find_packages
 
-version = '0.1'
+def read(*rnames):
+    return open(os.path.join(os.path.dirname(__file__), *rnames)).read()
+
+version = '1.1'
+
+long_description = (
+    read('README.txt')
+    + '\n' +
+    'Change history\n'
+    '**************\n'
+    + '\n' +
+    read('CHANGES.txt')
+    + '\n' +
+    'Detailed Documentation\n'
+    '**********************\n'
+    + '\n' +
+    read('slc', 'subsite', 'README.txt')
+    + '\n' +
+    'Contributors\n'
+    '************\n'
+    + '\n' +
+    read('CONTRIBUTORS.txt')
+    + '\n' 
+    )
+    
+tests_require=['zope.testing']
 
 setup(name='slc.subsite',
       version=version,
       description="Make a Folder behave like a Subsite",
-      long_description="""\
-""",
+      long_description=long_description,
       # Get more strings from http://www.python.org/pypi?%3Aaction=list_classifiers
       classifiers=[
         "Framework :: Plone",
@@ -18,17 +47,22 @@ setup(name='slc.subsite',
       keywords='subsite skin',
       author='Syslab.com GmbH',
       author_email='info@syslab.com',
-      url='http://svn.plone.org/svn/collective/slc.subsite',
+      url='https://svn.syslab.com/svn/syslabcom/slc.subsite/',
       license='GPL',
       packages=find_packages(exclude=['ez_setup']),
       namespace_packages=['slc'],
       include_package_data=True,
       zip_safe=False,
       install_requires=[
-          'setuptools',
+          'setuptools',    
           # -*- Extra requirements: -*-
       ],
+      tests_require=tests_require,
+      extras_require=dict(tests=tests_require),
+      test_suite = 'slc.subsite.tests.test_docs.test_suite',
       entry_points="""
-      # -*- Entry points: -*-
+      # -*- entry_points -*- 
       """,
-      )
+      paster_plugins = ["ZopeSkel"],
+      )      
+      
