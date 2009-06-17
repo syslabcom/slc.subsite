@@ -1,6 +1,13 @@
 slc.subsite Changelog
 =====================
 
+slc.subsite 1.2 (2009-06-17)
+----------------------------
+
+- Added testlayer (gerken)
+
+- updated svnignore (thomasw)
+
 slc.subsite 1.1 (2009-05-12)
 ----------------------------
 
