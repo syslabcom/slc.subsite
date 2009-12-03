@@ -1,6 +1,12 @@
 slc.subsite Changelog
 =====================
 
+slc.subsite 1.3 (unreleased)
+----------------------------
+
+- Added EUPL license (deroiste)
+
+
 slc.subsite 1.2 (2009-06-17)
 ----------------------------
 
