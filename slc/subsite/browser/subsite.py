@@ -8,13 +8,9 @@ from zope import component
 from zope import interface
 from zope import schema
 from zope.formlib import form
-from zope.app.event import objectevent
-from zope.app.i18n import ZopeMessageFactory as _
 
 from Products.CMFCore import utils as cmfutils
-from Products.CMFDefault.formlib.form import getLocale
 
-from Products.CMFPlone import PloneMessageFactory as _
 from Products.statusmessages import interfaces as statusmessages_ifaces
 
 from slc.subsite import interfaces 
