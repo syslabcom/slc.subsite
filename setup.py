@@ -63,7 +63,8 @@ setup(name='slc.subsite',
       extras_require=dict(tests=tests_require),
       test_suite = 'slc.subsite.tests.test_docs.test_suite',
       entry_points="""
-      # -*- entry_points -*- 
+      [z3c.autoinclude.plugin]
+      target = plone
       """,
       paster_plugins = ["ZopeSkel"],
       )      
