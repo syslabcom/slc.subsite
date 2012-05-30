@@ -1,3 +1,6 @@
+from zope.interface import directlyProvides, directlyProvidedBy
+from zope.component import queryUtility
+from zope.publisher.interfaces.browser import IBrowserSkinType
 from Acquisition import aq_base, aq_inner
 from urlparse import urlparse, urlunparse, urljoin
 from zope import interface
@@ -5,6 +8,8 @@ from zope import component
 import logging
 from slc.subsite.interfaces import ISubsiteSkinStorage
 from p4a.subtyper.interfaces import ISubtyper
+from plone.theme.interfaces import IDefaultPloneLayer
+from plone.theme.layer import default_layers
 
 logger = logging.getLogger("slc.subsite")
 
@@ -26,13 +31,31 @@ def setskin(site, event):
     else:
         path = path_info
 
-
     skinname = storage.get(path, None)
         
     if skinname is None:
         return
 
     site.changeSkin(skinname, R)
+    # this section is copied from plone.theme.layer::mark_layer()
+    skin = queryUtility(IBrowserSkinType, name=skinname)
+    if skin is not None:
+        layer_ifaces = []
+        default_ifaces = []
+        # We need to make sure IDefaultPloneLayer comes after
+        # any other layers, even if they don't explicitly extend it.
+        if IDefaultPloneLayer in skin.__iro__:
+            default_ifaces += [IDefaultPloneLayer]
+        for layer in directlyProvidedBy(event.request):
+            if layer in default_layers:
+                default_ifaces.append(layer)
+            elif IBrowserSkinType.providedBy(layer):
+                continue
+            else:
+                layer_ifaces.append(layer)
+        ifaces = [skin,] + layer_ifaces + default_ifaces
+        directlyProvides(event.request, *ifaces)
+    
 
 
 def registerSubsiteSkin(ob, event):
