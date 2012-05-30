@@ -23,7 +23,9 @@ def getDefaultLanguage(self):
     """Returns the default language."""
 #    import pdb; pdb.set_trace()
     if isSubsite(aq_parent(self)):
-        return aq_parent(self).getField('default_language').getAccessor(aq_parent(self))()
+        field = aq_parent(self).getField('default_language')
+        if field is not None:
+            return field.getAccessor(aq_parent(self))()
     portal_properties = getToolByName(self, "portal_properties", None)
     if portal_properties is None:
         return 'en'
