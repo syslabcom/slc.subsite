@@ -6,6 +6,7 @@ from Products.CMFCore.utils import getToolByName
 from Products.CMFPlone import utils
 from Products.CMFPlone.interfaces import IFactoryTool
 
+
 def getSubsiteRoot(context, relativeRoot=None):
     """Get the path to the root of the navigation tree. If context or one of
     its parents until (but not including) the portal root implements
@@ -25,20 +26,23 @@ def getSubsiteRoot(context, relativeRoot=None):
 
     portal = portal_url.getPortalObject()
     obj = context
-    while not ISubsiteEnhanced.providedBy(obj) and aq_base(obj) is not aq_base(portal):
-        # XXX a bit ugly: if this method is called with a context from inside the portal_factory, we cannot
-        # use the parent() method, as it calls aq_parent on aq_inner of the object. This directly returns the main
+    while (not ISubsiteEnhanced.providedBy(obj)
+           and aq_base(obj) is not aq_base(portal)):
+        # XXX a bit ugly: if this method is called with a context from inside
+        # the portal_factory, we cannot use the parent() method, as it calls
+        # aq_parent on aq_inner of the object. This directly returns the main
         # portal
         if IFactoryTool.providedBy(obj):
             obj = aq_parent(obj)
         else:
             obj = utils.parent(obj)
-    if ISubsiteEnhanced.providedBy(obj) and aq_base(obj) is not aq_base(portal):
+    if (ISubsiteEnhanced.providedBy(obj)
+        and aq_base(obj) is not aq_base(portal)):
         return '/'.join(obj.getPhysicalPath())
 
     rootPath = relativeRoot
     portalPath = portal_url.getPortalPath()
-    contextPath = '/'.join(context.getPhysicalPath())
+    # contextPath = '/'.join(context.getPhysicalPath())
 
     if rootPath:
         if rootPath == '/':

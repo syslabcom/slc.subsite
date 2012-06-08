@@ -1,9 +1,7 @@
-from zope import interface
-from zope.formlib import form
 from slc.subsite import interfaces
-from zope.annotation import interfaces as annointerfaces
 
 _marker = object()
+
 
 class ToggleEnhancementsView(object):
     """
@@ -23,8 +21,8 @@ class ToggleEnhancementsView(object):
         else:
             activated = 'Subsite+activated'
 
-        response.redirect(self.context.absolute_url() + \
-                          '/view?portal_status_message='+activated)
+        response.redirect(self.context.absolute_url() +
+                          '/view?portal_status_message=' + activated)
 
     def _set_media_activated(self, v):
         interfaces.IMediaActivator(self.context).media_activated = v
@@ -33,4 +31,3 @@ class ToggleEnhancementsView(object):
         return interfaces.IMediaActivator(self.context).media_activated
 
     media_activated = property(_get_media_activated, _set_media_activated)
-

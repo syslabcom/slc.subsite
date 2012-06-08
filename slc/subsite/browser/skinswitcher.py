@@ -2,19 +2,20 @@ from zope.interface import directlyProvides, directlyProvidedBy
 from zope.component import queryUtility
 from zope.publisher.interfaces.browser import IBrowserSkinType
 from Acquisition import aq_base, aq_inner
-from urlparse import urlparse, urlunparse, urljoin
-from zope import interface
 from zope import component
-import logging
 from slc.subsite.interfaces import ISubsiteSkinStorage
 from p4a.subtyper.interfaces import ISubtyper
 from plone.theme.interfaces import IDefaultPloneLayer
 from plone.theme.layer import default_layers
 
+import logging
+
 logger = logging.getLogger("slc.subsite")
 
+
 def setskin(site, event):
-    """ Depending on the skin property set on the subsite we override the default skin.
+    """Depending on the skin property set on the subsite we override the
+    default skin.
     """
     storage = component.queryUtility(ISubsiteSkinStorage)
     if storage is None:
@@ -23,16 +24,16 @@ def setskin(site, event):
     path_info = R.PATH_INFO
 
     TRNS = R.TraversalRequestNameStack
-    if len(TRNS)>1 and 'virtual_hosting' in TRNS:
-        idx = TRNS.index('virtual_hosting')-1
-        trnspath = TRNS[0:idx]+TRNS[idx+2:]
+    if len(TRNS) > 1 and 'virtual_hosting' in TRNS:
+        idx = TRNS.index('virtual_hosting') - 1
+        trnspath = TRNS[0:idx] + TRNS[idx + 2:]
         trnspath.reverse()
-        path = "/".join(site.getPhysicalPath()+tuple(trnspath))
+        path = "/".join(site.getPhysicalPath() + tuple(trnspath))
     else:
         path = path_info
 
     skinname = storage.get(path, None)
-        
+
     if skinname is None:
         return
 
@@ -53,9 +54,8 @@ def setskin(site, event):
                 continue
             else:
                 layer_ifaces.append(layer)
-        ifaces = [skin,] + layer_ifaces + default_ifaces
+        ifaces = [skin, ] + layer_ifaces + default_ifaces
         directlyProvides(event.request, *ifaces)
-    
 
 
 def registerSubsiteSkin(ob, event):
@@ -69,10 +69,9 @@ def registerSubsiteSkin(ob, event):
     storage = component.queryUtility(ISubsiteSkinStorage)
     if storage is None:
         return
-    
-    
+
     subsitepath = "/".join(ob.getPhysicalPath())
-    
+
     if not skinname and storage.has_path(subsitepath):
         storage.remove(subsitepath)
     else:
@@ -89,6 +88,7 @@ def registerSubsiteSkin(ob, event):
             else:
                 storage.add(subsitepath, skinname)
 
+
 def unregisterSubsiteSkin(ob, event):
     """ registers a new skinname for the subsite if set
     """
@@ -96,13 +96,13 @@ def unregisterSubsiteSkin(ob, event):
     if field is None:
         return
 
-    skinname = field.getAccessor(ob)()
+    # skinname = field.getAccessor(ob)()
     storage = component.queryUtility(ISubsiteSkinStorage)
     if storage is None:
         return
-    
+
     subsitepath = "/".join(ob.getPhysicalPath())
-    
+
     if storage.has_path(subsitepath):
         storage.remove(subsitepath)
 
@@ -116,7 +116,8 @@ def unregisterSubsiteSkin(ob, event):
                 storage.remove(subsitepath)
 
 
-# Event handler to catch our own patched event while translation named IObjectTranslationReferenceSetEvent
+# Event handler to catch our own patched event while translation named
+# IObjectTranslationReferenceSetEvent
 # We need this to be able to subtype an object while it is translated.
 def subtype_on_translate(obj, evt):
     """ EVENT:

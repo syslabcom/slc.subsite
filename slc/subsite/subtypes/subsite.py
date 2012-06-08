@@ -1,12 +1,12 @@
-from zope.interface import implements
-from zope.schema.interfaces import IVocabularyFactory
-from Products.CMFPlone import PloneMessageFactory as _
-from Products.Archetypes import atapi 
-from Products.validation import V_REQUIRED
-from archetypes.schemaextender.interfaces import ISchemaExtender, IOrderableSchemaExtender
+from archetypes.schemaextender.interfaces import IOrderableSchemaExtender
 from archetypes.schemaextender.field import ExtensionField
+from Products.Archetypes import atapi
 from Products.CMFCore.utils import getToolByName
 from Products.CMFDefault.formlib.vocabulary import SimpleVocabulary
+from Products.CMFPlone import PloneMessageFactory as _
+from zope.interface import implements
+from zope.schema.interfaces import IVocabularyFactory
+
 
 class ExtendedStringField(ExtensionField, atapi.StringField):
     """ A String Field """
@@ -21,8 +21,9 @@ class SchemaExtender(object):
                 languageIndependent=True,
                 vocabulary_factory='slc.subsite.SkinNamesVocabulary',
                 widget=atapi.SelectionWidget(
-                    label = _(u'label_skin', default=u'Skin'),
-                    description=_(u'description_skin', default=u'Choose an existing skin name'),
+                    label=_(u'label_skin', default=u'Skin'),
+                    description=_(u'description_skin',
+                                  default=u'Choose an existing skin name'),
                 ),
             ),
             ExtendedStringField('default_language',
@@ -30,8 +31,11 @@ class SchemaExtender(object):
                 languageIndependent=True,
                 vocabulary_factory='slc.subsite.SupportedLangsVocabulary',
                 widget=atapi.SelectionWidget(
-                    label = _(u'label_default_language', default=u'Default language'),
-                    description=_(u'description_default_language', default=u'Select the default language for the subsite.'),
+                    label=_(u'label_default_language',
+                            default=u'Default language'),
+                    description=_(u'description_default_language',
+                                  default=(u'Select the default language for'
+                                           ' the subsite.')),
                 ),
             ),
             ]
@@ -53,11 +57,11 @@ class SchemaExtender(object):
 class SkinNamesVocabulary(object):
     """ Vocabulary to list the available skins """
     implements(IVocabularyFactory)
-    
+
     def __call__(self, context):
         context = getattr(context, 'context', context)
         skintool = getToolByName(context, 'portal_skins')
-        items = [ (v, v, v) for v in skintool.getSkinSelections()]
+        items = [(v, v, v) for v in skintool.getSkinSelections()]
         items = [(None, '', 'None')] + items
         return SimpleVocabulary.fromTitleItems(items)
 
@@ -70,7 +74,5 @@ class SupportedLangsVocabulary(object):
     def __call__(self, context):
         context = getattr(context, 'context', context)
         langtool = getToolByName(context, 'portal_languages')
-        items = [ (k,k,v) for k, v in langtool.listSupportedLanguages()]
+        items = [(k, k, v) for k, v in langtool.listSupportedLanguages()]
         return SimpleVocabulary.fromTitleItems(items)
-
-
