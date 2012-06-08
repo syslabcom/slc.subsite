@@ -1,20 +1,26 @@
-from Products.PloneTestCase import PloneTestCase
+from plone.app.testing import FunctionalTesting
+from plone.app.testing import IntegrationTesting
+from plone.app.testing import PLONE_FIXTURE
+from plone.app.testing import PloneSandboxLayer
+from plone.app.testing import applyProfile
 
-from Products.PloneTestCase.layer import onsetup
-from Products.PloneTestCase import layer
 
-SiteLayer = layer.PloneSite
+class SlcSubsite(PloneSandboxLayer):
 
-class SubsiteLayer(SiteLayer):
-    @classmethod
-    def setUp(cls):
-        """Set up additional products and ZCML required to test this product.
-        """
-        PloneTestCase.setupPloneSite()
-        SiteLayer.setUp()
+    defaultBases = (PLONE_FIXTURE,)
 
-class SubsiteTestCase(PloneTestCase.PloneTestCase):
-    layer = SubsiteLayer
+    def setUpZope(self, app, configurationContext):
+        import slc.subsite
+        self.loadZCML('configure.zcml', package=slc.subsite)
 
-class SubsiteFunctionalTestCase(PloneTestCase.FunctionalTestCase):
-    layer = SubsiteLayer
+    def setUpPloneSite(self, portal):
+        applyProfile(portal, 'slc.subsite:default')
+
+
+SLC_SUBSITE_FIXTURE = SlcSubsite()
+INTEGRATION_TESTING = IntegrationTesting(
+    bases=(SLC_SUBSITE_FIXTURE,),
+    name="SlcSubsite:Integration")
+FUNCTIONAL_TESTING = FunctionalTesting(
+    bases=(SLC_SUBSITE_FIXTURE,),
+    name="SlcSubsite:Functional")
