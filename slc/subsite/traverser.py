@@ -19,7 +19,9 @@ def getRootIsolatedObjects():
     are on the top level) that have to be isolated from each others
     """
     #return frozenset([id for id, obj in getSite().aq_parent.objectItems() if IObjectToIsolate.providedBy(obj)])
-    return frozenset([id for id, obj in getSite().objectItems() if INavigationRoot.providedBy(obj)])
+    objs = dict()
+    [objs.update({id: obj}) for id, obj in getSite().objectItems() if INavigationRoot.providedBy(obj)]
+    return objs
 
 class BaseIsolatedTraverser(DefaultPublishTraverse):
     """
@@ -28,13 +30,14 @@ class BaseIsolatedTraverser(DefaultPublishTraverse):
 
     def _traverseAndCheckObject(self, request, name):
         """
-        This method fetch the object using the default traverser.
+        This method fetches the object using the default traverser.
         If traversed name match one of the isolated object then raise a
         KeyError to return a 404 to the user. Otherwise it just return the
         object returned by the default traverser.
         """
         obj = super(BaseIsolatedTraverser, self).publishTraverse(request, name)
-        if name in getRootIsolatedObjects():
+        rootObjs = getRootIsolatedObjects()
+        if name in rootObjs.keys() and obj == rootObjs[name]:
             if IObjectToIsolate.providedBy(obj) or INavigationRoot.providedBy(obj):
                 raise KeyError(name)
         return obj
@@ -44,7 +47,7 @@ class IsolatedSiteTraverser(BaseIsolatedTraverser):
     """
     This traverser is applied only once you traverse an IIsolatedObject.
 
-    This traverser look first if one of the names to be traversed matches
+    This traverser looks first if one of the names to be traversed matches
     with one of the root isolated objects. Then
 
         * if None of them match then it use the default traverser (see DefaultPublishTraverse) ;
@@ -58,7 +61,7 @@ class IsolatedSiteTraverser(BaseIsolatedTraverser):
 
     def publishTraverse(self, request, name):
         namesToTraverse = frozenset([name] + self.request['TraversalRequestNameStack'])
-        knownRootObjects = getRootIsolatedObjects()
+        knownRootObjects = frozenset(getRootIsolatedObjects().keys())
         if namesToTraverse.intersection(knownRootObjects):
             alsoProvides(self.request, IPotentialBadRequest)
             return self._traverseAndCheckObject(request, name)
