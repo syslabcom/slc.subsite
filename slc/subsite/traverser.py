@@ -20,7 +20,8 @@ def getRootIsolatedObjects():
     """
     #return frozenset([id for id, obj in getSite().aq_parent.objectItems() if IObjectToIsolate.providedBy(obj)])
     objs = dict()
-    [objs.update({id: obj}) for id, obj in getSite().objectItems() if INavigationRoot.providedBy(obj)]
+    [objs.update({id: obj}) for id, obj in getSite().objectItems() if \
+        IObjectToIsolate.providedBy(obj) or INavigationRoot.providedBy(obj)]
     return objs
 
 class BaseIsolatedTraverser(DefaultPublishTraverse):
