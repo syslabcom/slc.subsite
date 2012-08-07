@@ -3,6 +3,25 @@ from zope.interface import Interface
 from plone.app.layout.navigation.interfaces import INavigationRoot
 
 
+class IIsolatedObject(Interface):
+    """
+    Marker interface for object to isolate from their siblings
+    """
+
+
+class IPotentialBadRequest(Interface):
+    """
+    Marker interface for a request to isolate traversed object from the
+    IIsolatedObject siblings
+    """
+
+
+class IObjectToIsolate(Interface):
+    """
+    Marker interface for object(s) in root that you cannot acquire
+    while traversing
+    """
+
 class IAnySubsiteCapable(Interface):
     """Any aspect of subsite capable.
     """
@@ -13,7 +32,7 @@ class IPossibleSubsite(IAnySubsiteCapable):
     """
 
 
-class ISubsiteEnhanced(INavigationRoot):
+class ISubsiteEnhanced(INavigationRoot, IIsolatedObject):
     """ Marker interface for subsites
     """
 
@@ -52,3 +71,4 @@ class ISubsiteSkinStorage(Interface):
 
     def __iter__():
         """Iterate over all existing subsite paths."""
+

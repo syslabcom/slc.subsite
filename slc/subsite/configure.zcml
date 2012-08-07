@@ -1,7 +1,7 @@
 <configure xmlns="http://namespaces.zope.org/zope"
            xmlns:browser="http://namespaces.zope.org/browser"
            xmlns:zcml="http://namespaces.zope.org/zcml"
-           xmlns:five="http://namespaces.zope.org/five"    
+           xmlns:five="http://namespaces.zope.org/five"
            i18n_domain="slc.subsite">
 
     <five:registerPackage package="." initialize=".initialize" />
@@ -18,12 +18,12 @@
     <class class="Products.ATContentTypes.content.folder.ATFolder">
       <implements interface="slc.subsite.interfaces.IPossibleSubsite" />
     </class>
-    
+
     <class class="Products.ATContentTypes.content.folder.ATBTreeFolder">
       <implements interface="slc.subsite.interfaces.IPossibleSubsite" />
     </class>
-    
-    
+
+
 
     <utility
         name="slc.subsite.FolderSubsite"
@@ -44,7 +44,7 @@
     <!-- Zope 2.10 - 3.3 support -->
     <configure zcml:condition="installed zope.annotation">
         <include package="zope.annotation" />
-        
+
         <adapter
             for=".interfaces.IPossibleSubsite"
             provides="zope.annotation.interfaces.IAnnotations"
@@ -56,7 +56,7 @@
     <!-- Assure annotatable for plone2.5 and plone 3 -->
     <configure
         zcml:condition="installed plone.app.layout">
-    
+
         <class class="Products.ATContentTypes.content.topic.ATTopic">
           <implements interface="zope.annotation.interfaces.IAttributeAnnotatable" />
         </class>
@@ -70,12 +70,20 @@
           <implements interface="zope.annotation.interfaces.IAttributeAnnotatable" />
         </class>
     </configure>
-    
+
 
     <adapter
         name="slc.subsite.subtypes.subsite"
         for="slc.subsite.interfaces.ISubsiteEnhanced"
         factory=".subtypes.subsite.SchemaExtender" />
+
+  <adapter
+      factory=".traverser.IsolatedSiteTraverser"
+      provides="zope.publisher.interfaces.IPublishTraverse"/>
+
+  <adapter
+      factory=".traverser.IsolatedRequestTraverser"
+      provides="zope.publisher.interfaces.IPublishTraverse"/>
 
 
 </configure>
