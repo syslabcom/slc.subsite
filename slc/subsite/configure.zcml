@@ -85,5 +85,6 @@
       factory=".traverser.IsolatedRequestTraverser"
       provides="zope.publisher.interfaces.IPublishTraverse"/>
 
+  <interface interface=".interfaces.IObjectToIsolate" />
 
 </configure>
