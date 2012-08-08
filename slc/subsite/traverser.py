@@ -42,7 +42,10 @@ class BaseIsolatedTraverser(DefaultPublishTraverse):
         """
         obj = super(BaseIsolatedTraverser, self).publishTraverse(request, name)
         rootObjs = getRootIsolatedObjects()
-        if name in rootObjs.keys() and obj == rootObjs[name]:
+        # Zope object or computed (e.g. method)?
+        if not hasattr(obj, '_p_oid'):
+            return obj
+        if name in rootObjs.keys() and obj._p_oid == rootObjs[name]._p_oid:
             if IObjectToIsolate.providedBy(obj) or INavigationRoot.providedBy(obj):
                 raise KeyError(name)
         return obj
@@ -67,6 +70,7 @@ class IsolatedSiteTraverser(BaseIsolatedTraverser):
     def publishTraverse(self, request, name):
         namesToTraverse = frozenset([name] + self.request['TraversalRequestNameStack'])
         knownRootObjects = frozenset(getRootIsolatedObjects().keys())
+        logger.info('name: %s, TraversalRequestNameStack: %s' % (name, self.request['TraversalRequestNameStack']))
         if namesToTraverse.intersection(knownRootObjects):
             alsoProvides(self.request, IPotentialBadRequest)
             return self._traverseAndCheckObject(request, name)
