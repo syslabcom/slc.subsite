@@ -14,7 +14,7 @@ import logging
 
 logger = logging.getLogger('slc.subsite site-siteisolation')
 
-@memoize
+#@memoize
 def getRootIsolatedObjects():
     """
     Return the objects on the Zope root (we are assuming here that your sites
@@ -70,7 +70,7 @@ class IsolatedSiteTraverser(BaseIsolatedTraverser):
         knownRootObjects = frozenset(getRootIsolatedObjects().keys())
         logger.info('namesToTraverse: %s, knownRootObjects: %s' % (str(namesToTraverse), str(knownRootObjects)))
         if namesToTraverse.intersection(knownRootObjects):
-            alsoProvides(self.request, IPotentialBadRequest)
+            #alsoProvides(self.request, IPotentialBadRequest)
             return self._traverseAndCheckObject(request, name)
         else:
             return super(IsolatedSiteTraverser, self).publishTraverse(request, name)
