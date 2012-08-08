@@ -14,7 +14,7 @@ import logging
 
 logger = logging.getLogger('slc.subsite site-siteisolation')
 
-#@memoize
+@memoize
 def getRootIsolatedObjects():
     """
     Return the objects on the Zope root (we are assuming here that your sites
