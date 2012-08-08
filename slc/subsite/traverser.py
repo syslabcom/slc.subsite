@@ -10,7 +10,9 @@ from slc.subsite.interfaces import (IIsolatedObject,
                                     IPotentialBadRequest,
                                     IObjectToIsolate)
 from plone.app.layout.navigation.interfaces import INavigationRoot
+import logging
 
+logger = logging.getLogger('slc.subsite site-siteisolation')
 
 @memoize
 def getRootIsolatedObjects():
@@ -38,7 +40,10 @@ class BaseIsolatedTraverser(DefaultPublishTraverse):
         """
         obj = super(BaseIsolatedTraverser, self).publishTraverse(request, name)
         rootObjs = getRootIsolatedObjects()
+        logger.info('obj: %s, name: %s' % ('/'.join(obj.getPhysicalPath()), name))
         if name in rootObjs.keys() and obj == rootObjs[name]:
+            logger.info('IObjectToIsolate.providedBy(obj): %s, INavigationRoot.providedBy(obj): %s' % \
+                (IObjectToIsolate.providedBy(obj), INavigationRoot.providedBy(obj)))
             if IObjectToIsolate.providedBy(obj) or INavigationRoot.providedBy(obj):
                 raise KeyError(name)
         return obj
@@ -63,6 +68,7 @@ class IsolatedSiteTraverser(BaseIsolatedTraverser):
     def publishTraverse(self, request, name):
         namesToTraverse = frozenset([name] + self.request['TraversalRequestNameStack'])
         knownRootObjects = frozenset(getRootIsolatedObjects().keys())
+        logger.info('namesToTraverse: %s, knownRootObjects: %s' % (str(namesToTraverse), str(knownRootObjects)))
         if namesToTraverse.intersection(knownRootObjects):
             alsoProvides(self.request, IPotentialBadRequest)
             return self._traverseAndCheckObject(request, name)
