@@ -20,10 +20,12 @@ def getRootIsolatedObjects():
     Return the objects on the Zope root (we are assuming here that your sites
     are on the top level) that have to be isolated from each others
     """
-    #return frozenset([id for id, obj in getSite().aq_parent.objectItems() if IObjectToIsolate.providedBy(obj)])
     objs = dict()
     [objs.update({id: obj}) for id, obj in getSite().objectItems() if \
         IObjectToIsolate.providedBy(obj) or INavigationRoot.providedBy(obj)]
+    for item in objs.values():
+        [objs.update({id: obj}) for id, obj in item.objectItems() if \
+            IObjectToIsolate.providedBy(obj) or INavigationRoot.providedBy(obj)]
     return objs
 
 class BaseIsolatedTraverser(DefaultPublishTraverse):
@@ -40,10 +42,7 @@ class BaseIsolatedTraverser(DefaultPublishTraverse):
         """
         obj = super(BaseIsolatedTraverser, self).publishTraverse(request, name)
         rootObjs = getRootIsolatedObjects()
-        logger.info('obj: %s, name: %s' % ('/'.join(obj.getPhysicalPath()), name))
         if name in rootObjs.keys() and obj == rootObjs[name]:
-            logger.info('IObjectToIsolate.providedBy(obj): %s, INavigationRoot.providedBy(obj): %s' % \
-                (IObjectToIsolate.providedBy(obj), INavigationRoot.providedBy(obj)))
             if IObjectToIsolate.providedBy(obj) or INavigationRoot.providedBy(obj):
                 raise KeyError(name)
         return obj
@@ -68,9 +67,8 @@ class IsolatedSiteTraverser(BaseIsolatedTraverser):
     def publishTraverse(self, request, name):
         namesToTraverse = frozenset([name] + self.request['TraversalRequestNameStack'])
         knownRootObjects = frozenset(getRootIsolatedObjects().keys())
-        logger.info('namesToTraverse: %s, knownRootObjects: %s' % (str(namesToTraverse), str(knownRootObjects)))
         if namesToTraverse.intersection(knownRootObjects):
-            #alsoProvides(self.request, IPotentialBadRequest)
+            alsoProvides(self.request, IPotentialBadRequest)
             return self._traverseAndCheckObject(request, name)
         else:
             return super(IsolatedSiteTraverser, self).publishTraverse(request, name)
@@ -81,7 +79,7 @@ class IsolatedRequestTraverser(BaseIsolatedTraverser):
     This traverser is applied only for marked request with IPotentialBadRequest
     interface.
 
-    It just check if the name we are traversing is one of the
+    It just checks if the name we are traversing is one of the
     isolated objects.
     """
     adapts(Interface, IPotentialBadRequest)
