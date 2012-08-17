@@ -77,13 +77,13 @@
         for="slc.subsite.interfaces.ISubsiteEnhanced"
         factory=".subtypes.subsite.SchemaExtender" />
 
-  <!--adapter
+  <adapter
       factory=".traverser.IsolatedSiteTraverser"
       provides="zope.publisher.interfaces.IPublishTraverse"/>
 
   <adapter
       factory=".traverser.IsolatedRequestTraverser"
-      provides="zope.publisher.interfaces.IPublishTraverse"/-->
+      provides="zope.publisher.interfaces.IPublishTraverse"/>
 
   <interface interface=".interfaces.IObjectToIsolate" />
 
