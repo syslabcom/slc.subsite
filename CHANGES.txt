@@ -1,6 +1,11 @@
 slc.subsite Changelog
 =====================
 
+1.4 (unreleased)
+----------------
+
+- Plone 4
+
 slc.subsite 1.3 (unreleased)
 ----------------------------
 
