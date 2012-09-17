@@ -1,7 +1,7 @@
 slc.subsite Changelog
 =====================
 
-1.4 (unreleased)
+1.4 (2012-09-17)
 ----------------
 
 - Plone 4
